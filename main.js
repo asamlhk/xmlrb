@@ -6,6 +6,7 @@ const getXML = (file, lang) => {
     let p = new Promise(
         (resolve, reject) => {
             let qs = [];
+            let rs = [];
             fs.readFile(file, 'utf8',
                 (err, data) => {
                     const xml = data;
@@ -23,9 +24,22 @@ const getXML = (file, lang) => {
                                     qs.push(j)
                                 }
                             );
+
+                            xmlQuery(e).children().find('reflexiveQuestion').each(
+                                c => {
+                                    const n = xmlQuery(c);
+                                    const j = {
+                                        key: n.attr('id'),
+                                        value: n.find('prompt').text(),
+                                        lang: lang
+                                    }
+                                    rs.push(j)
+                                }
+                            );
                         }
                     )
-                    resolve(qs);
+                    //console.log(rs)
+                   resolve([...qs ,...rs]);
                 }
 
             );
