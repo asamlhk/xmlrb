@@ -10,21 +10,19 @@ const getXML = (file, lang) => {
                 (err, data) => {
                     const xml = data;
                     const ast = XmlReader.parseSync(xml);
-                    const node = xmlQuery(ast).children().find('baseQuestions').children().each(
+                    const node = xmlQuery(ast).children().each(
                         e => {
                             xmlQuery(e).children().find('baseQuestion').each(
                                 c => {
                                     const n = xmlQuery(c);
                                     const j = {
-                                        key: n.find('baseQuestion').attr('id'),
+                                        key: n.attr('id'),
                                         value: n.find('prompt').text(),
                                         lang: lang
                                     }
                                     qs.push(j)
-                                } 
+                                }
                             );
-
-
                         }
                     )
                     resolve(qs);
