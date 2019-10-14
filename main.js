@@ -12,13 +12,19 @@ const getXML = (file, lang) => {
                     const ast = XmlReader.parseSync(xml);
                     const node = xmlQuery(ast).children().find('baseQuestions').children().each(
                         e => {
-                            const c = xmlQuery(e);
-                            const j = {
-                                key: c.find('baseQuestion').attr('id'),
-                                value: c.find('prompt').text(),
-                                lang: lang
-                            }
-                            qs.push(j)
+                            xmlQuery(e).children().find('baseQuestion').each(
+                                c => {
+                                    const n = xmlQuery(c);
+                                    const j = {
+                                        key: n.find('baseQuestion').attr('id'),
+                                        value: n.find('prompt').text(),
+                                        lang: lang
+                                    }
+                                    qs.push(j)
+                                } 
+                            );
+
+
                         }
                     )
                     resolve(qs);
@@ -49,14 +55,14 @@ Promise.all(
     (
         results
     ) => {
-         
+
         let data = results;
         let en = results[0];
         let zh = results[1];
-        let keys  = en.map(
+        let keys = en.map(
             x => x.key
         )
-        
+
         const pairs = keys.map(
             k => {
                 return {
